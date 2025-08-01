@@ -1,1 +1,0 @@
-# HTML-Kilo-Boy-Indeksi
