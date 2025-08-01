@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI Hesaplayıcı</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.2em;
+            font-weight: 600;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+            font-size: 1.1em;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: 600;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result.zayif {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+        }
+
+        .result.normal {
+            background: linear-gradient(135deg, #55a3ff, #003d82);
+            color: white;
+        }
+
+        .result.kilolu {
+            background: linear-gradient(135deg, #fdcb6e, #e17055);
+            color: white;
+        }
+
+        .result.obez {
+            background: linear-gradient(135deg, #fd79a8, #e84393);
+            color: white;
+        }
+
+        .result.ileri-derece {
+            background: linear-gradient(135deg, #a29bfe, #6c5ce7);
+            color: white;
+        }
+
+        .bmi-value {
+            font-size: 1.4em;
+            margin-top: 10px;
+        }
+
+        .icon {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">⚖️</div>
+        <h1>BMI Hesaplayıcı</h1>
+        
+        <div class="input-group">
+            <label for="boy">Boyunuzu Giriniz (m):</label>
+            <input type="number" id="boy" step="0.01" placeholder="Örn: 1.75">
+        </div>
+        
+        <div class="input-group">
+            <label for="kilo">Kilonuzu Giriniz (kg):</label>
+            <input type="number" id="kilo" step="0.1" placeholder="Örn: 70">
+        </div>
+        
+        <button id="hesapla" onclick="hesapla()">BMI Hesapla</button>
+        
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        function hesapla() {
+            var boy = document.getElementById("boy").value;
+            var kilo = document.getElementById("kilo").value;
+            
+            if (!boy || !kilo) {
+                alert("Lütfen boy ve kilo değerlerini giriniz!");
+                return;
+            }
+            
+            var b = Number(boy);
+            var k = Number(kilo);
+            
+            if (b <= 0 || k <= 0) {
+                alert("Lütfen geçerli değerler giriniz!");
+                return;
+            }
+            
+            var ind = k / (b * b);
+            var resultDiv = document.getElementById("result");
+            var kategori = "";
+            var className = "";
+            var emoji = "";
+            
+            if (ind < 18.5) {
+                kategori = "Zayıf";
+                className = "zayif";
+                emoji = "⬇️";
+            } else if (ind >= 18.5 && ind < 25) {
+                kategori = "Normal";
+                className = "normal";
+                emoji = "✅";
+            } else if (ind >= 25 && ind < 30) {
+                kategori = "Kilolu";
+                className = "kilolu";
+                emoji = "⚠️";
+            } else if (ind >= 30 && ind < 40) {
+                kategori = "Obez";
+                className = "obez";
+                emoji = "🔴";
+            } else {
+                kategori = "İleri Derece Obez";
+                className = "ileri-derece";
+                emoji = "🚨";
+            }
+            
+            resultDiv.className = "result " + className;
+            resultDiv.innerHTML = `
+                <div style="font-size: 1.5em; margin-bottom: 10px;">${emoji}</div>
+                <div>Kategori: ${kategori}</div>
+                <div class="bmi-value">BMI: ${ind.toFixed(2)}</div>
+            `;
+            resultDiv.style.display = "block";
+        }
+        
+        // Enter tuşu ile hesaplama
+        document.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                hesapla();
+            }
+        });
+    </script>
+</body>
+</html>
